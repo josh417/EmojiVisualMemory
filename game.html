@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body onload="newGame()">
+    <div class="header">
+        <h1>EmojiMem</h1>
+        <h2 id="livesText">❤️❤️❤️</h2>
+        <p id="scoreText">Score: 0</p>
+        <p id="highScoreText">High Score: 0</p>
+    </div>
+
+    <div class="emoji-container">
+        <h4 id="emojiText"></h4>
+        <!-- End Game Display -->
+        <h5 id="gameOver">Game Over</h5>
+        <p id="finalScore">Score: 0</p>
+        <button onclick="newGame()"  id="playAgainBtn" class="btn-primary">Play Again</button>
+    </div>
+
+    <div class="btn-container">
+        <button id="newBtn" onclick="newBtn()" class="btn-primary">New</button>
+        <button id="oldBtn" onclick="oldBtn()" class="btn-primary">Old</button>
+    </div>
+
+
+    <style>
+        #gameOver {
+            display: none;
+        }
+        #finalScore {
+            display: none;
+        }
+        #playAgainBtn {
+            display: none;
+        }
+        #highScoreText {
+            margin-top: -1rem;
+            display: none;
+        }
+    </style>
+
+</body>
+
+
+
+
+
+<script>
+
+// Variables
+let score = 0
+let highScore = 0
+let scoreText = document.getElementById("scoreText")
+let finalScoreText = document.getElementById("finalScore")
+let highScoreText = document.getElementById("highScoreText")
+
+let lives = 3
+let livesText = document.getElementById("livesText")
+let livesBlack = '🖤'
+
+let emojiText = document.getElementById("emojiText")
+
+let currentEmoji = ''
+let emojiList = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😚', '😋', '😛', '🤪', '🤨', '🧐', '😎', '🤩']
+let oldEmojiList = []
+
+
+function newEmoji() {
+    // Gets a new emoji after a button is pressed.
+    currentEmoji = emojiList[Math.floor(Math.random() * emojiList.length)]
+    emojiText.innerHTML = currentEmoji
+}
+
+function newGame() {
+    // Removing Elements
+    document.getElementById("gameOver").style.display = "none"
+    document.getElementById("finalScore").style.display = "none"
+    document.getElementById("playAgainBtn").style.display = "none"
+
+    // Adding Elements
+    emojiText.style.display = "block"
+    document.getElementById("newBtn").style.display = "block"
+    document.getElementById("oldBtn").style.display = "block"
+
+    // Resetting Values
+    score = 0
+    scoreText.innerHTML = "Score: 0"
+    lives = 3
+    livesText.innerHTML = '❤️❤️❤️'
+    oldEmojiList = []
+
+
+    // Gets a random emoji. Assigns it to the variable currentEmoji. Then updates the innerHTML of emojiText to display it.
+    currentEmoji = emojiList[Math.floor(Math.random() * emojiList.length)]
+    emojiText.innerHTML = currentEmoji
+}
+
+function endGame() {
+    // Removing Elements
+    emojiText.style.display = "none"
+    document.getElementById("newBtn").style.display = "none"
+    document.getElementById("oldBtn").style.display = "none"
+
+    // Final Score
+    finalScoreText.innerHTML = "Final Score: " + score
+
+    // Adding Elements
+    document.getElementById("gameOver").style.display = "block"
+    document.getElementById("finalScore").style.display = "block"
+    document.getElementById("playAgainBtn").style.display = "block"
+
+
+
+    // High Score
+    if (score > highScore) {
+        highScore = score
+        highScoreText.innerHTML = "High Score: " + score
+    }
+
+    highScoreText.style.display = "block"
+}
+
+function removeLife() {
+    lives--
+    if (lives === 2) {
+        livesText.innerHTML = '❤️❤️🖤'
+        newEmoji()
+    }
+    if (lives === 1) {
+        livesText.innerHTML = '❤️🖤🖤'
+        newEmoji()
+    }
+    if (lives === 0) {
+        livesText.innerHTML = '🖤🖤🖤'
+        console.log("Game Over")
+        endGame()
+    }
+
+
+}
+
+function increaseScore() {
+    score++
+    scoreText.innerHTML = 'Score: ' + score // Could be error here.
+    newEmoji()
+}
+
+
+
+function newBtn() {
+
+    let same = ''
+
+    for (let i = 0; i < oldEmojiList.length; i++) {
+        if (currentEmoji === oldEmojiList[i]) {
+            same = oldEmojiList[i]
+        }}
+
+    
+    if (same === currentEmoji) {
+        console.log("It is not new")
+        same = ''
+        removeLife()
+    } else {
+        console.log("It is new")
+        same = ''
+        oldEmojiList.push(currentEmoji)
+        increaseScore()
+    }
+
+}
+
+function oldBtn() {
+    console.log("Old button pressed")
+
+    let same = ''
+
+    for (let i = 0; i < oldEmojiList.length; i++) {
+        if (currentEmoji === oldEmojiList[i]) {
+            same = oldEmojiList[i]
+        }}
+    
+    if (same === currentEmoji) {
+        console.log("It is not new, you were correct.")
+        same = ''
+        increaseScore()
+    } else {
+        console.log("It is new, you were wrong")
+        same = ''
+        oldEmojiList.push(currentEmoji)
+        removeLife()
+    }
+
+
+
+
+}
+
+
+
+
+</script>
+
+
+
+
+</html>
